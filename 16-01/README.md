@@ -54,3 +54,10 @@
 1. Установите opentofu(fork terraform с лицензией Mozilla Public License, version 2.0) любой версии
 2. Попробуйте выполнить тот же код с помощью tofu apply, а не terraform apply.
 
+---
+
+### Ответ 1
+
+Проверяю установленную версию Terraform
+
+![alt text](Pictures/pic01.jpg)
