@@ -67,3 +67,25 @@
 3. Найдите в state-файле секретное содержимое созданного ресурса random_password, пришлите в качестве ответа конкретный ключ и его значение.
 
 ![alt text](Pictures/pic02.jpg)
+
+4. После раскомментирования строк и выполнения команды ```terraform validate``` получаем сообщение об ошибке
+╷
+│ Error: Missing name for resource
+│ 
+│   on main.tf line 23, in resource "docker_image":
+│   23: resource "docker_image" {
+│ 
+│ All resource blocks must have 2 labels (type, name). - Буквальный перевод "Все блоки ресурсов должны иметь 2 метки (тип, название)". Т.е. Отсутствует имя ресурса ```docker_image```. Правильно записать следующим образом:
+
+```resource "docker_image" "nginx" {
+###...
+}
+```
+╵
+╷
+│ Error: Invalid resource name
+│ 
+│   on main.tf line 28, in resource "docker_container" "1nginx":
+│   28: resource "docker_container" "1nginx" {
+│ 
+│ A name must start with a letter or underscore and may contain only letters, digits, underscores, and dashes.
