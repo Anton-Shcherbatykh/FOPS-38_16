@@ -77,7 +77,8 @@
 │ 
 │ All resource blocks must have 2 labels (type, name). - Буквальный перевод "Все блоки ресурсов должны иметь 2 метки (тип, название)". Т.е. Отсутствует имя ресурса ```docker_image```. Правильно записать следующим образом:
 
-```resource "docker_image" "nginx" {
+```bash
+resource "docker_image" "nginx" {
 ###...
 }
 ```
