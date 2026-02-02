@@ -118,3 +118,37 @@ resource "docker_container" "nginx_1" {
 Поправил строку с именем ресурса ```random_string_FAKE.resulT``` на корректную и всё встало на свои места.
 
 ![alt text](Pictures/pic04.jpg)
+
+5. Исправленный фрагмент кода:
+
+```bash
+#однострочный комментарий
+
+resource "random_password" "random_string" {
+  length      = 16
+  special     = false
+  min_upper   = 1
+  min_lower   = 1
+  min_numeric = 1
+}
+
+
+resource "docker_image" "nginx" {
+  name         = "nginx:latest"
+  keep_locally = true
+}
+
+resource "docker_container" "nginx_1" {
+  image = docker_image.nginx.image_id
+  name  = "example_${random_password.random_string.result}"
+
+  ports {
+    internal = 80
+    external = 9090
+  }
+}
+
+```
+Вывод команды ```docker ps``` на скрине экрана
+
+![alt text](Pictures/pic05.jpg)
