@@ -69,24 +69,43 @@
 ![alt text](Pictures/pic02.jpg)
 
 4. После раскомментирования строк и выполнения команды ```terraform validate``` получаем сообщение об ошибке
-╷
+
+```bash
 │ Error: Missing name for resource
 │ 
 │   on main.tf line 23, in resource "docker_image":
 │   23: resource "docker_image" {
 │ 
-│ All resource blocks must have 2 labels (type, name). - Буквальный перевод "Все блоки ресурсов должны иметь 2 метки (тип, название)". Т.е. Отсутствует имя ресурса ```docker_image```. Правильно записать следующим образом:
+│ All resource blocks must have 2 labels (type, name).
+```
+
+Буквальный перевод "Все блоки ресурсов должны иметь 2 метки (тип, название)". Т.е. Отсутствует имя ресурса ```docker_image```.
+
+Правильно записать следующим образом:
 
 ```bash
 resource "docker_image" "nginx" {
 ###...
 }
 ```
-╵
-╷
+
+
+Вторая ошибка
+
+```bash
 │ Error: Invalid resource name
 │ 
 │   on main.tf line 28, in resource "docker_container" "1nginx":
 │   28: resource "docker_container" "1nginx" {
 │ 
 │ A name must start with a letter or underscore and may contain only letters, digits, underscores, and dashes.
+```
+Перевод "Имя должно начинаться с буквы или символа подчеркивания и может содержать только буквы, цифры, знаки подчеркивания и тире". А в раскомментированной сроке имя начинается с цифры 1, что и вызывает ошибку.
+
+Корректно записать следующим образом:
+
+```bash
+resource "docker_container" "nginx_1" {
+  # ...
+}
+```
