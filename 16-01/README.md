@@ -70,6 +70,8 @@
 
 4. После раскомментирования строк и выполнения команды ```terraform validate``` получаем сообщение об ошибке
 
+![alt text](Pictures/pic03.jpg)
+
 ```bash
 │ Error: Missing name for resource
 │ 
@@ -106,6 +108,6 @@ resource "docker_image" "nginx" {
 
 ```bash
 resource "docker_container" "nginx_1" {
-  # ...
+###...
 }
 ```
