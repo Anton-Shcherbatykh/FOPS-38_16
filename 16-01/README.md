@@ -155,15 +155,15 @@ resource "docker_container" "nginx_1" {
 
 6. Заменил имя docker-контейнера в блоке кода на ```hello_world```. Затем выполнил команду ```terraform apply -auto-approve```. Результат выполнения команды на принтскрнах
 
-![alt text](Pictures/pic05_01.jpg)
+![alt text](Pictures/pic05_1.jpg)
 
-![alt text](Pictures/pic05_02.jpg)
+![alt text](Pictures/pic05_2.jpg)
 
-![alt text](Pictures/pic05_03.jpg)
+![alt text](Pictures/pic05_3.jpg)
 
-![alt text](Pictures/pic05_04.jpg)
+![alt text](Pictures/pic05_4.jpg)
 
-![alt text](Pictures/pic05_05.jpg)
+![alt text](Pictures/pic05_5.jpg)
 
 Опасность применения ключа ```-auto-approve``` при выполнении команды ```terraform apply``` заключается в риске непреднамеренных изменений в инфраструктуре. Этот флаг позволяет автоматически применять изменения без ручного подтверждения, что может привести к необратимым последствиям. При использовании этого ключа Terraform не запрашивает подтверждение плана, и пользователь не может убедиться, что изменения соответствуют описанию в плане.
 
