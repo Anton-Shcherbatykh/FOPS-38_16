@@ -152,3 +152,40 @@ resource "docker_container" "nginx_1" {
 Вывод команды ```docker ps``` на скрине экрана
 
 ![alt text](Pictures/pic05.jpg)
+
+6. Заменил имя docker-контейнера в блоке кода на ```hello_world```. Затем выполнил команду ```terraform apply -auto-approve```. Результат выполнения команды на принтскрнах
+
+![alt text](Pictures/pic05_01.jpg)
+
+![alt text](Pictures/pic05_02.jpg)
+
+![alt text](Pictures/pic05_03.jpg)
+
+![alt text](Pictures/pic05_04.jpg)
+
+![alt text](Pictures/pic05_05.jpg)
+
+Опасность применения ключа ```-auto-approve``` при выполнении команды ```terraform apply``` заключается в риске непреднамеренных изменений в инфраструктуре. Этот флаг позволяет автоматически применять изменения без ручного подтверждения, что может привести к необратимым последствиям. При использовании этого ключа Terraform не запрашивает подтверждение плана, и пользователь не может убедиться, что изменения соответствуют описанию в плане.
+
+7. Уничтожаю созданные ресурсы с помощью команды ```terraform destoy```.
+
+ ![alt text](Pictures/pic06.jpg)
+
+Прикладываю содержимое файла ```terraform.tfstate```.
+
+```bash
+{
+  "version": 4,
+  "terraform_version": "1.13.0",
+  "serial": 17,
+  "lineage": "c8db7b71-bd80-95f7-dcb8-54c57d9000ac",
+  "outputs": {},
+  "resources": [],
+  "check_results": null
+}
+```
+
+8. Docker-образ **nginx:latest** не был удалён по причине того, что в конфигурации (файл main.tf) прописана настройка ```keep_locally = true```. Это следует из официальной документации Terraform. Если для ресурса docker_image: установлено значение ```keep_locally = true```, то образ будет храниться локально после удаления ресурса. Terraform удаляет только сам ресурс в своём состоянии, но не удаляет сам docker-image.
+
+ ![alt text](Pictures/pic07.jpg)
+
