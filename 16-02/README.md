@@ -99,6 +99,101 @@ eval $(ssh-agent) && ssh-add Вы познакомитесь с тем как п
 
 Примените изменения.
 
+---
+
+### Ответ 3
+
+Создал файл 'vms_platform.tf'
+
+```bash
+# vms_platform.tf - переменные для виртуальных машин
+
+# Переменные для VM_web
+variable "vm_web_instance_name" {
+  type        = string
+  default     = "netology-develop-platform-web"
+  description = "VM instance name for web"
+}
+
+variable "vm_web_platform_id" {
+  type        = string
+  default     = "standard-v4a"
+  description = "VM platform ID for web"
+}
+
+variable "vm_web_cores" {
+  type        = number
+  default     = 2
+  description = "VM cores web"
+}
+
+variable "vm_web_memory" {
+  type        = number
+  default     = 2
+  description = "VM memory web"
+}
+
+variable "vm_web_core_fraction" {
+  type        = number
+  default     = 20
+  description = "VM core fraction web"
+}
+
+variable "vm_web_family" {
+  type        = string
+  default     = "ubuntu-2004-lts"
+  description = "VM image family web"
+}
+
+# Переменные для VM_db
+variable "vm_db_instance_name" {
+  type        = string
+  default     = "netology-develop-platform-db"
+  description = "VM instance name for db"
+}
+
+variable "vm_db_platform_id" {
+  type        = string
+  default     = "standard-v4a"
+  description = "VM platform ID for db"
+}
+
+variable "vm_db_cores" {
+  type        = number
+  default     = 2
+  description = "VM cores db"
+}
+
+variable "vm_db_memory" {
+  type        = number
+  default     = 2
+  description = "VM memory db"
+}
+
+variable "vm_db_core_fraction" {
+  type        = number
+  default     = 20
+  description = "VM core fraction db"
+}
+
+variable "vm_db_family" {
+  type        = string
+  default     = "ubuntu-2004-lts"
+  description = "VM image family db"
+}
+
+variable "vm_db_zone" {
+  type        = string
+  default     = "ru-central1-b"
+  description = "VM zone db"
+}
+```
+
+Подумал и немного "заморочился" с разнесением переменных по ресурсам для каждой ВМ. Из-за требований, чтобы вторая ВМ работала в зоне "ru-central1-b", пришлось внести изменения и в main.tf.
+Применил изменения. Получил две работающих ВМ на платформе AMD.
+
+![alt text](Pictures/pic08.jpg)
+
 ### Задание 4
 
 Объявите в файле outputs.tf один output , содержащий: instance_name, external_ip, fqdn для каждой из ВМ в удобном лично для вас формате.(без хардкода!!!)
