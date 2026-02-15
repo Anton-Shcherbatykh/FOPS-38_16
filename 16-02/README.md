@@ -208,6 +208,7 @@ variable "vm_db_zone" {
 Применил изменения, командой terraform output получил следующие данные
 
 ![alt text](Pictures/pic09.jpg)
+
 ---
 
 ### Задание 5
