@@ -48,7 +48,7 @@ resource "yandex_compute_instance" "platform_web" {
   
   network_interface {
     subnet_id = yandex_vpc_subnet.develop.id
-    nat       = true
+    nat       = var.main_nat
   }
 
   metadata = var.common_metadata
