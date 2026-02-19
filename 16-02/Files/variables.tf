@@ -36,6 +36,11 @@ variable "vpc_name" {
   description = "VPC network & subnet name"
 }
 
+variable "main_nat" {
+  type        = bool
+  default     = true
+  description = "NAT for network interface"
+}
 
 ###ssh vars
 
