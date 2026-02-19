@@ -16,7 +16,7 @@ resource "yandex_vpc_subnet" "develop_db" {
   name           = "${var.vpc_name}-db"
   zone           = var.default_zone_db
   network_id     = yandex_vpc_network.develop.id
-  v4_cidr_blocks = ["10.0.2.0/24"]
+  v4_cidr_blocks = var.db_cidr_blocks
 }
 
 # Ресурсы для ВМ web
