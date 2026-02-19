@@ -52,6 +52,6 @@ variable "main_nat" {
 
 variable "vms_ssh_root_key" {
   type        = string
-  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILxW1LdSHkjwQrx8nddQm7oiPQacXejctCeZo4tYth4s shcherbatykh@VM2"
+  default     = "ssh-ed25519 my key"
   description = "ssh-keygen -t ed25519"
 }
