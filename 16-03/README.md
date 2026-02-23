@@ -153,8 +153,58 @@ locals {
 ---
 
 ### Задание 3
-Создайте 3 одинаковых виртуальных диска размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле disk_vm.tf .
-Создайте в том же файле одиночную(использовать count или for_each запрещено из-за задания №4) ВМ c именем "storage" . Используйте блок dynamic secondary_disk{..} и мета-аргумент for_each для подключения созданных вами дополнительных дисков.
+1. Создайте 3 одинаковых виртуальных диска размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле disk_vm.tf.
+2. Создайте в том же файле одиночную(использовать count или for_each запрещено из-за задания №4) ВМ c именем "storage" . Используйте блок dynamic secondary_disk{..} и мета-аргумент for_each для подключения созданных вами дополнительных дисков.
+
+### Ответ 3
+
+1. Создал 3 одинаковых диска
+
+```bash
+# Создание трёх дополнительных накопителей
+resource "yandex_compute_disk" "storage_disks" {
+  count = 3
+  
+  name       = "storage-disk-${count.index + 1}"
+  type       = "network-hdd"
+  zone       = var.default_zone
+  size       = 1
+```
+2. Создал виртуальную машину ```storage``` и подключил к ней созданные диски
+
+```bash
+# Создание ВМ "storage" с подключением созданных дисков
+resource "yandex_compute_instance" "storage" {
+  name        = "storage"
+  platform_id = "standard-v3"
+  zone        = var.default_zone
+
+  resources {
+    cores         = 2
+    memory        = 2
+    core_fraction = 20
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd85qmcpsmrrg53l9082"
+      size     = 10
+    }
+  }
+
+  dynamic "secondary_disk" {
+    for_each = { for idx, disk in yandex_compute_disk.storage_disks : idx => disk }
+    content {
+      disk_id = secondary_disk.value.id
+    }
+  }
+```
+
+![alt text](Pictures/pic05.jpg)
+
+![alt text](Pictures/pic06.jpg)
+
+![alt text](Pictures/pic07.jpg)
 
 ### Задание 4
 В файле ansible.tf создайте inventory-файл для ansible. Используйте функцию tepmplatefile и файл-шаблон для создания ansible inventory-файла из лекции. Готовый код возьмите из демонстрации к лекции demonstration2. Передайте в него в качестве переменных группы виртуальных машин из задания 2.1, 2.2 и 3.2, т. е. 5 ВМ.
