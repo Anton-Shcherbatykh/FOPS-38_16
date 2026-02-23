@@ -150,6 +150,7 @@ locals {
 
 ![alt text](Pictures/pic04.jpg)
    
+---
 
 ### Задание 3
 Создайте 3 одинаковых виртуальных диска размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле disk_vm.tf .
