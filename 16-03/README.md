@@ -9,6 +9,10 @@
 
 ### Ответ 1
 
+1. Изучил проект
+2. Заполнил токен, ID облака и ID папки пользователя в personal.auto.tfvars
+3. Инициализировал проект и выполнил код.
+
 ![alt text](Pictures/pic00.jpg)
 
 ![alt text](Pictures/pic01.jpg)
