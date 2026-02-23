@@ -36,6 +36,124 @@ variable "each_vm" {
 5. Используйте функцию file в local-переменной для считывания ключа ~/.ssh/id_rsa.pub и его последующего использования в блоке metadata, взятому из ДЗ №2.
 6. Инициализируйте проект, выполните код.
 
+### Ответ 2
+
+1. Создал файл count-vm.tf и описал в нем 2 одинаковые виртуальные машины, которые будут называться web-1 и web-2.
+
+```bash
+# Создание двух ВМ для web с помощью count (зависят от ВМ БД)
+resource "yandex_compute_instance" "web" {
+  count = 2
+  
+  depends_on = [yandex_compute_instance.db]
+  
+  name        = "web-${count.index + 1}"
+  platform_id = "standard-v3"
+  zone        = var.default_zone
+
+  resources {
+    cores         = var.vms_web_resources.cores
+    memory        = var.vms_web_resources.memory
+    core_fraction = var.vms_web_resources.core_fraction
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd85qmcpsmrrg53l9082"  # Ubuntu 22.04 LTS
+      size     = 20
+    }
+  }
+
+  network_interface {
+    subnet_id          = yandex_vpc_subnet.develop.id
+    nat                = var.main_nat
+    security_group_ids = [yandex_vpc_security_group.example.id]
+  }
+
+  metadata = merge(var.common_metadata, {
+    ssh-keys = "ubuntu:${local.ssh_key}"
+  })
+}
+```
+2. Создал файл for_each-vm.tf. В нем описал создание двух ВМ с именами "main" и "replica" разных по cpu/ram/disk , используя мета-аргумент for_each loop.
+
+```bash
+# Локальная переменная для SSH ключа
+locals {
+  ssh_key = file("~/.ssh/mykeyterraform.pub")
+}
+
+# Создание двух ВМ для баз данных с помощью for_each
+resource "yandex_compute_instance" "db" {
+  for_each = {
+    for vm in var.each_vm : vm.vm_name => vm
+  }
+  
+  name        = each.value.vm_name
+  platform_id = "standard-v3"
+  zone        = var.default_zone
+
+  resources {
+    cores         = each.value.cpu
+    memory        = each.value.ram
+    core_fraction = 20
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd85qmcpsmrrg53l9082"  # Ubuntu 22.04 LTS
+      size     = each.value.disk_volume
+    }
+  }
+
+  network_interface {
+    subnet_id          = yandex_vpc_subnet.develop.id
+    nat                = var.main_nat
+    security_group_ids = [yandex_vpc_security_group.example.id]
+  }
+
+  metadata = {
+    serial-port-enable = "1"
+    ssh-keys           = "ubuntu:${local.ssh_key}"
+  }
+}
+```
+
+3. ВМ с именами "main" и "replica" создаются после создания ВМ web-1 и web-2
+
+```bash
+resource "yandex_compute_instance" "web" {
+  count = 2
+  
+  depends_on = [yandex_compute_instance.db]
+  
+  name        = "web-${count.index + 1}"
+  platform_id = "standard-v3"
+  zone        = var.default_zone
+```
+
+4. Для считывания файла ключа использую local-переменную и использую ее в блоке metadata
+
+```bash
+locals {
+  ssh_key = file("~/.ssh/mykeyterraform.pub")
+}
+```
+
+```bash
+ metadata = {
+    serial-port-enable = "1"
+    ssh-keys           = "ubuntu:${local.ssh_key}"
+  }
+```
+
+5. Инициализировал проект, выполнил код. К ранее созданным 3-м объектам добавилось ещё 4 ВМ
+
+![alt text](Pictures/pic03.jpg)
+
+![alt text](Pictures/pic04.jpg)
+   
+
 ### Задание 3
 Создайте 3 одинаковых виртуальных диска размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле disk_vm.tf .
 Создайте в том же файле одиночную(использовать count или for_each запрещено из-за задания №4) ВМ c именем "storage" . Используйте блок dynamic secondary_disk{..} и мета-аргумент for_each для подключения созданных вами дополнительных дисков.
