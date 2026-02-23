@@ -41,7 +41,6 @@ variable "each_vm" {
 1. Создал файл count-vm.tf и описал в нем 2 одинаковые виртуальные машины, которые будут называться web-1 и web-2.
 
 ```bash
-# Создание двух ВМ для web с помощью count (зависят от ВМ БД)
 resource "yandex_compute_instance" "web" {
   count = 2
   
@@ -78,12 +77,10 @@ resource "yandex_compute_instance" "web" {
 2. Создал файл for_each-vm.tf. В нем описал создание двух ВМ с именами "main" и "replica" разных по cpu/ram/disk , используя мета-аргумент for_each loop.
 
 ```bash
-# Локальная переменная для SSH ключа
 locals {
   ssh_key = file("~/.ssh/mykeyterraform.pub")
 }
 
-# Создание двух ВМ для баз данных с помощью for_each
 resource "yandex_compute_instance" "db" {
   for_each = {
     for vm in var.each_vm : vm.vm_name => vm
