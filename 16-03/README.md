@@ -231,7 +231,56 @@ storage ansible_host=<внешний ip-адрес> fqdn=<полное доме�
 
 4. Выполните код. Приложите скриншот получившегося файла.
 
-Для общего зачёта создайте в вашем GitHub-репозитории новую ветку terraform-03. Закоммитьте в эту ветку свой финальный код проекта, пришлите ссылку на коммит.
-Удалите все созданные ресурсы.
+### Ответ 4
+
+1. Создал файл ansible.tf, по примеру из лекции написал код с использованием функции tepmplatefile
+
+```bash
+resource "local_file" "ansible_inventory" {
+  content = templatefile("${path.module}/hosts.tftpl",
+    {
+      webservers = yandex_compute_instance.web  # Передаем полные объекты ВМ
+      databases  = yandex_compute_instance.db   # Передаем полные объекты ВМ
+      storage    = [yandex_compute_instance.storage]  # Передаем полный объект ВМ
+    }
+  )
+  filename = "${abspath(path.module)}/hosts.ini"
+}
+```
+
+Создал файл шаблона hosts.tftpl
+
+```bash
+[webservers]
+%{~ for i in webservers ~}
+${i.name} ansible_host=${i.network_interface[0].nat_ip_address != null ? i.network_interface[0].nat_ip_address : i.network_interface[0].ip_address} fqdn=${i.fqdn}
+%{~ endfor ~}
+
+[databases]
+%{~ for i in databases ~}
+${i.name} ansible_host=${i.network_interface[0].nat_ip_address != null ? i.network_interface[0].nat_ip_address : i.network_interface[0].ip_address} fqdn=${i.fqdn}
+%{~ endfor ~}
+
+[storage]
+%{~ for i in storage ~}
+${i.name} ansible_host=${i.network_interface[0].nat_ip_address != null ? i.network_interface[0].nat_ip_address : i.network_interface[0].ip_address} fqdn=${i.fqdn}
+%{~ endfor ~}
+```
+
+После выполнения кода получил сообщение об успешном выполнении и файл hosts.ini с результатами
+
+![alt text](Pictures/pic08.jpg)
+
+Проверяем ip-адреса машин в hosts.ini и в Yandex.Cloud
+
+![alt text](Pictures/pic07_1.jpg)
+
+![alt text](Pictures/pic08_1.jpg)
+
+Всё верно, код отработал корректно.
+
+В общем для темы Terraform репозитории FOPS-38_16 создал ветку FOPS-38_16/16-03, в которой сохранил все скриншоты и финальный код проекта.
+
+
 
 
